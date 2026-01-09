@@ -137,29 +137,31 @@ app.post('/cart', authMiddleware, (req, res) => {
 
 const PORT = process.env.PORT || 3000; //le damos un puerto.
 
-// LOGIN - Pauta 3
-const usuarios = [
-  { usuario: "admin@admin.com", password: "1234" }
-];
-
 app.post("/login", (req, res) => {
     const { usuario, password } = req.body;
 
-    // Busca usuario coincidente
-    const userFound = usuarios.find(
-      u => u.usuario === usuario && u.password === password
-    );
-
     // Si no existe → error
-    if (!userFound) {
-        return res.status(401).json({
+    if (!usuario || !password) {
+        return res.status(400).json({
             mensaje: "Usuario o contraseña incorrectos"
+        });
+    }
+
+    if (!usuario.includes("@") || !usuario.includes(".")) {
+        return res.status(400).json({
+            mensaje: "Email inválido"
+        });
+    }
+
+    if (password.length < 4) {
+        return res.status(400).json({
+            mensaje: "La contraseña debe tener al menos 4 caracteres"
         });
     }
 
     // Si existe → generar token
     const token = jwt.sign(
-        { usuario: userFound.usuario }, 
+        { usuario }, 
         JWT_SECRET, 
         { expiresIn: "1h" }
     );
