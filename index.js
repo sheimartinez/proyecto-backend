@@ -1,6 +1,8 @@
 // LOGIN - Pauta 3
 const jwt = require("jsonwebtoken");
 
+const JWT_SECRET = process.env.JWT_SECRET || "CLAVE_DEV";
+
 // parte4
 function authMiddleware(req, res, next) {
     const header = req.headers.authorization;
@@ -12,7 +14,7 @@ function authMiddleware(req, res, next) {
     }
     const token = parts[1];
 
-    jwt.verify(token, "CLAVE_123", (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
         if (err) return res.status(401).json({ mensaje: "Token inválido" });
         req.user = decoded;
         next();
@@ -133,12 +135,11 @@ app.post('/cart', authMiddleware, (req, res) => {
     });
 });
 
-const PORT = 3000; //le damos un puerto.
+const PORT = process.env.PORT || 3000; //le damos un puerto.
 
 // LOGIN - Pauta 3
 const usuarios = [
-  { usuario: "admin@admin.com", password: "1234" },
-  { usuario: "lucas@gmail.com", password: "abcd" }
+  { usuario: "admin@admin.com", password: "1234" }
 ];
 
 app.post("/login", (req, res) => {
@@ -159,7 +160,7 @@ app.post("/login", (req, res) => {
     // Si existe → generar token
     const token = jwt.sign(
         { usuario: userFound.usuario }, 
-        "CLAVE_SUPER_SECRETA_123", 
+        JWT_SECRET, 
         { expiresIn: "1h" }
     );
 
@@ -185,5 +186,5 @@ app.post('/envio', (req, res) => {
 
 //ponemos a escuchar al servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en ${PORT}`);
 });
