@@ -7,7 +7,7 @@ const conexion = mysql.createConnection({ /*Crea una conexión individual a la b
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   ssl: {
-    rejectUnauthorized: true
+    rejectUnauthorized: false
   }
 });
 
