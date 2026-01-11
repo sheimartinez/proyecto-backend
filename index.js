@@ -76,9 +76,10 @@ app.get('/user_cart', authMiddleware, (req, res) => {
 //endpoint POST/cart
 app.post('/cart', authMiddleware, (req, res) => {
     const carrito = req.body; //guardo en una variable los datos que llegan del frontend.
-    const sqlCliente = "INSERT INTO Cliente (Nombre, Apellido, Correo, Direccion, Telefono) VALUES ('Cliente', 'Generico', 'mail@mail.com', 'direccion', '0000')";//primero creamos un cliente simple
+    const sqlCliente = "INSERT INTO Cliente (Nombre, Apellido, Correo, Direccion, Telefono) VALUES ('Cliente', 'Generico', ? , 'direccion', '0000')";//primero creamos un cliente simple
+    const mailUnico = `cliente_${Date.now()}@mail.com`;
     
-    conexion.query(sqlCliente, (errorCliente, resultadoCliente) => {
+    conexion.query(sqlCliente, [mailUnico], (errorCliente, resultadoCliente) => {
         if (errorCliente) {
             console.log("Error al crear cliente:", errorCliente);
             res.status(500).json({ error: "No se pudo crear el cliente" });
