@@ -82,7 +82,7 @@ app.post('/cart', authMiddleware, (req, res) => {
     conexion.query(sqlCliente, [mailUnico], (errorCliente, resultadoCliente) => {
         if (errorCliente) {
             console.log("Error al crear cliente:", errorCliente);
-            res.status(500).json({ error: "No se pudo crear el cliente" });
+            res.status(500).json({ error: "No se pudo crear el cliente", detalle: errorCliente.sqlMessage});
             return;
         }
         
